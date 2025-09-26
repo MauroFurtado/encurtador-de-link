@@ -20,7 +20,7 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-// Armazena os links encurtados em memória
+
 const urlDatabase = {};
 
 app.post('/api/shorturl', function(req, res) {
@@ -44,7 +44,7 @@ app.post('/api/shorturl', function(req, res) {
     }
     let short_url = Math.floor(Math.random() * 10000).toString();
     urlDatabase[short_url] = url; // Salva no "banco"
-    res.json({ original_url: url, short_url: short_url });
+    res.json({ "original_url": url, "short_url": short_url });
   });
 });
 
