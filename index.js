@@ -19,6 +19,10 @@ app.get('/', function(req, res) {
 app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
+
+// Armazena os links encurtados em memória
+const urlDatabase = {};
+
 app.post('/api/shorturl', function(req, res) {
   let url = req.body.url;
   let urlRegex = /^https?:\/\/.+\..+/;
@@ -39,8 +43,20 @@ app.post('/api/shorturl', function(req, res) {
       return res.json({ error: 'invalid URL' });
     }
     let short_url = Math.floor(Math.random() * 10000).toString();
+    urlDatabase[short_url] = url; // Salva no "banco"
     res.json({ original_url: url, short_url: short_url });
   });
+});
+
+
+app.get('/api/shorturl/:short_url', function(req, res) {
+  const short_url = req.params.short_url;
+  const original_url = urlDatabase[short_url];
+  if (original_url) {
+    return res.redirect(original_url);
+  } else {
+    return res.json({ error: 'No short URL found for given input' });
+  }
 });
 
 app.listen(port, function() {
